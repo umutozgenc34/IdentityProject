@@ -1,4 +1,6 @@
 ﻿using IdentityProject.WebApi.Models;
+using IdentityProject.WebApi.Models.Dtos.Users.Request;
+using IdentityProject.WebApi.Models.Dtos.Users.Response;
 using IdentityProject.WebApi.Repository.Abstracts;
 using IdentityProject.WebApi.Repository.Abstracts.Concrates;
 using IdentityProject.WebApi.Services.Abstracts;
@@ -13,33 +15,40 @@ public class UserService : IUserService
         _userRepository = userRepository;
     }
 
-    public User Add(User user)
+    public User Add(AddUserRequestDto dto)
     {
-        throw new NotImplementedException();
+        User user =(User) dto;
+
+         User created = _userRepository.Add(user);
+         return created;
     }
 
     public User Delete(int id)
     {
-        throw new NotImplementedException();
+        User user = _userRepository.Delete(id);
+        return user;
     }
 
-    public List<User> GetAllUsers()
+    public List<UserResponseDto> GetAllUsers()
     {
-        throw new NotImplementedException();
+        return _userRepository.GetAll().Select(x=> (UserResponseDto)x).ToList();
     }
 
     public User GetByEmail(string email)
     {
-        throw new NotImplementedException();
+        User user = _userRepository.GetByEmail(email);
+        return user;
     }
 
     public User GetById(int id)
     {
-        throw new NotImplementedException();
+        User user = _userRepository.GetById(id);
+        return user;
     }
 
     public User Update(User user)
     {
-        throw new NotImplementedException();
+        User updatedUser = _userRepository.Update(user);
+        return updatedUser;
     }
 }

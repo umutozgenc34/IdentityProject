@@ -1,5 +1,7 @@
 ﻿using IdentityProject.WebApi.Context;
 using IdentityProject.WebApi.Models;
+using IdentityProject.WebApi.Models.Dtos.Users.Request;
+using IdentityProject.WebApi.Services.Abstracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,39 +11,33 @@ namespace IdentityProject.WebApi.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        MsSqlContext msSqlContext;
-
-
-        [HttpPost("add")]
-        public IActionResult Add(User user)
+        private IUserService _userService;
+        public UsersController(IUserService userService)
         {
-            // insert into Users(...) values (...)
-            msSqlContext.Users.Add(user);
-            msSqlContext.SaveChanges();
-
-            return Ok(user);
+            _userService = userService;
         }
-        // IEntityTypeConfigurationBuilder
-
 
         [HttpGet("getall")]
         public IActionResult GetAll()
         {
-            // select * from users
-            List<User> users = msSqlContext.Users.ToList();
-            return Ok(users);
+            var result = _userService.GetAllUsers();
+            return Ok(result);
         }
 
-        [HttpGet("getbyid")]
-        public IActionResult GetById(int id)
+        [HttpPost("add")]
+        public IActionResult Add(AddUserRequestDto dto)
         {
-            // select * from users where id = (id)
-            User user = msSqlContext.Users.Find(id);
-
-            return Ok(user);
-
+            var result = _userService.Add(dto);
+            return Ok(result);
         }
 
-
+        [HttpGet("getemail")]
+        public IActionResult GetByEmail(string email)
+        {
+            AddUserRequestDto dto = new AddUserRequestDto();
+            User user = (User)dto;
+            var result = _userService.GetByEmail(email);
+            return Ok(result);
+        }
     }
 }
